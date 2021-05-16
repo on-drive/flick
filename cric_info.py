@@ -10,16 +10,12 @@ def get_match_details(series_id, match_id):
 
     match_detail_data = json.loads(detail_res)["match"]
 
-    # detail_list = [
-    #     {
-    #         "status_text": detail["statusText"],
-    #     }
-    #     for detail in match_detail_data
-    # ]
-
     status_text = match_detail_data["statusText"]
-
-    print(status_text)
+    # print(status_text)
+    if status_text:
+        return status_text
+    else:
+        return "no live data"
 
 
 def get_match_list():
@@ -34,20 +30,22 @@ def get_match_list():
             "match_name": match["slug"],
             "match_id": match["objectId"],
             "series_id": match["series"]["objectId"],
+            "team-1": match["teams"][0]["team"]["longName"],
+            "team-2": match["teams"][1]["team"]["longName"],
         }
         for match in match_data
+        if match["status"] == "Live"
     ]
+    xyx = ""
     print("Choose any one of the following: \n")
     for i in range(0, len(match_list)):
-        print(str(i) + " " + match_list[i]["match_name"])
+        xyx += (
+            str(i)
+            + ". "
+            + match_list[i]["team-1"]
+            + " vs "
+            + match_list[i]["team-2"]
+            + "\n"
+        )
 
-    user_choice = int(input("\nEnter match number to get recent updates: "))
-
-    # print(str(match_list[user_choice]["match_id"]))
-
-    get_match_details(
-        match_list[user_choice]["series_id"], match_list[user_choice]["match_id"]
-    )
-
-
-get_match_list()
+    return xyx, match_list
