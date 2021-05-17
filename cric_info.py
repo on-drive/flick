@@ -18,14 +18,14 @@ def get_match_details(series_id, match_id):
         return "no live data"
 
 
-def get_match_list():
+def get_match_dict_list():
     response = requests.get(
         "https://hs-consumer-api.espncricinfo.com/v1/pages/matches/current?latest=true"
     ).text
 
     match_data = json.loads(response)["matches"]
 
-    match_list = [
+    match_dict_list = [
         {
             "match_name": match["slug"],
             "match_id": match["objectId"],
@@ -36,16 +36,16 @@ def get_match_list():
         for match in match_data
         if match["status"] == "Live"
     ]
-    xyx = ""
+    match_list = ""
     print("Choose any one of the following: \n")
-    for i in range(0, len(match_list)):
-        xyx += (
+    for i in range(0, len(match_dict_list)):
+        match_list += (
             str(i)
             + ". "
-            + match_list[i]["team-1"]
+            + match_dict_list[i]["team-1"]
             + " vs "
-            + match_list[i]["team-2"]
+            + match_dict_list[i]["team-2"]
             + "\n"
         )
 
-    return xyx, match_list
+    return match_list, match_dict_list

@@ -5,7 +5,6 @@ import cric_info
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-# Enable logging
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
@@ -13,22 +12,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-a, b = cric_info.get_match_list()
+matches_list, matches_dict_list = cric_info.get_match_dict_list()
 
 
 def start(update, context):
-    """Send a message when the command /start is issued."""
     update.message.reply_text("Hi!")
 
 
 def help(update, context):
-    """Send a message when the command /help is issued."""
     update.message.reply_text("Help!")
-
-
-# def echo(update, context):
-#     """Echo the user message."""
-#     update.message.reply_text(update.message.text + "\nbaba op")
 
 
 def match_detail(update, context):
@@ -39,8 +31,8 @@ def match_detail(update, context):
         match_number = int(update.message.text)
         update.message.reply_text(
             cric_info.get_match_details(
-                b[match_number]["series_id"],
-                b[match_number]["match_id"],
+                matches_dict_list[match_number]["series_id"],
+                matches_dict_list[match_number]["match_id"],
             )
         )
     else:
@@ -48,33 +40,29 @@ def match_detail(update, context):
 
 
 def matches(update, context):
-    update.message.reply_text("Here's a list of current live matches:\n" + a)
+    update.message.reply_text("Here's a list of current live matches:\n" + matches_list)
 
 
 def error(update, context):
-    """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
 def main():
-    """Start the bot."""
 
     updater = Updater(constant.DOGE_BOT_API_KEY, use_context=True)
-    # Get the dispatcher to register handlers
+
     dp = updater.dispatcher
 
-    # on different commands - answer in Telegram
+    # command handler
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("matches", matches))
 
-    # on noncommand i.e message - echo the message on Telegram
+    # message handler
     dp.add_handler(MessageHandler(Filters.text, match_detail))
 
-    # log all errors
     dp.add_error_handler(error)
 
-    # Start the Bot
     updater.start_polling()
 
     updater.idle()
