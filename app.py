@@ -73,16 +73,16 @@ def match_detail(update, context):
     #     )
     # else:
     #     update.message.reply_text("Please enter a valid number. Thanks!")
+x = 2
 
-
-def alarm(context: CallbackContext) -> None:
+def alarm( context: CallbackContext) -> None:
     """Send the alarm message."""
     job = context.job
     context.bot.send_message(
         job.context,
         text=cric_info.get_match_details(
-            matches_dict_list[0]["series_id"],
-            matches_dict_list[0]["match_id"],
+            matches_dict_list[x]["series_id"],
+            matches_dict_list[x]["match_id"],
         ),
     )
 
@@ -96,6 +96,12 @@ def set_timer(update: Update, context: CallbackContext) -> None:
     if due < 0:
         update.message.reply_text("Sorry we can not go back to future!")
         return
+    global x
+    x = int(context.args[1])
+    if x < 0:
+        update.message.reply_text("Enter a valid match number ")
+        return
+    
 
     context.job_queue.run_repeating(alarm, due, context=chat_id, name=str(chat_id))
 
