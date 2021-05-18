@@ -1,6 +1,6 @@
 import logging
 
-import constant
+import constants
 import cric_info
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -49,7 +49,7 @@ def error(update, context):
 
 def main():
 
-    updater = Updater(constant.DOGE_BOT_API_KEY, use_context=True)
+    updater = Updater(constants.API_KEY, use_context=True)
 
     dp = updater.dispatcher
 
