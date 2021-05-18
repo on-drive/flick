@@ -11,11 +11,10 @@ def get_match_details(series_id, match_id):
     match_detail_data = json.loads(detail_res)["match"]
 
     status_text = match_detail_data["statusText"]
-    # print(status_text)
     if status_text:
         return status_text
     else:
-        return "no live data"
+        return "No live data"
 
 
 def get_match_dict_list():
@@ -37,7 +36,7 @@ def get_match_dict_list():
         if match["status"] == "Live"
     ]
     match_list = ""
-    print("Choose any one of the following: \n")
+    # print("Choose any one of the following: \n")
     for i in range(0, len(match_dict_list)):
         match_list += (
             str(i)
@@ -47,5 +46,7 @@ def get_match_dict_list():
             + match_dict_list[i]["team-2"]
             + "\n"
         )
-
-    return match_list, match_dict_list
+    if match_list:
+        return match_list, match_dict_list
+    else: 
+        return "No Live Matches", match_dict_list
