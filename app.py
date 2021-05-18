@@ -1,6 +1,6 @@
 import logging
 
-import constant
+import constants
 import cric_info
 
 
@@ -163,7 +163,7 @@ def error(update, context):
 
 def main():
 
-    updater = Updater(constant.API_KEY, use_context=True)
+    updater = Updater(constants.API_KEY, use_context=True)
 
     dp = updater.dispatcher
 
