@@ -11,10 +11,38 @@ def get_match_details(series_id, match_id):
     match_detail_data = json.loads(detail_res)["match"]
 
     status_text = match_detail_data["statusText"]
-    if status_text:
-        return status_text
+    team_1_score = match_detail_data["teams"][0]["score"]
+    team_2_score = match_detail_data["teams"][1]["score"]
+    team_1_name = match_detail_data["teams"][0]["team"]["name"]
+    team_2_name = match_detail_data["teams"][1]["team"]["name"]
+    # team_1_abv = match_detail_data["teams"][0]["team"]["abbreviation"]
+    # team_2_abv = match_detail_data["teams"][1]["team"]["abbreviation"]
+
+    # team_1_inning = int(match_detail_data["teams"][0]["inningNumbers"][0])
+    # team_2_inning = int(match_detail_data["teams"][1]["inningNumbers"][0])
+
+    match_name = team_1_name + " vs " + team_2_name
+
+    # team_1_scrcard = team_1_abv + " - " + team_1_score
+    # team_2_scrcard = team_2_abv + " - " + team_2_score
+
+    if match_name and team_1_score and team_2_score and status_text:
+        string = (
+            match_name + "\n" + team_1_score + "\n" + team_2_score + "\n" + status_text
+        )
+        return string
+    elif team_2_score == None and status_text and match_name:
+        string = (
+            match_name + "\n" + team_1_name + " " + team_1_score + "\n" + status_text
+        )
+        return string
+    elif team_1_score == None and status_text and match_name:
+        return (
+            match_name + "\n" + team_2_name + " " + team_2_score + "\n" + status_text
+        )
     else:
-        return "No live data"
+        return "No Live Data"
+    # return status_text
 
 
 def get_match_dict_list():
@@ -35,10 +63,10 @@ def get_match_dict_list():
                 "team-2": match["teams"][1]["team"]["longName"],
             }
             for match in match_data
-            if match["status"] == "Live"
+            # if match["status"] == "Live"
         ]
     except Exception:
-        pass    
+        pass
     match_list = ""
     # print("Choose any one of the following: \n")
     for i in range(0, len(match_dict_list)):
@@ -52,5 +80,5 @@ def get_match_dict_list():
         )
     if match_list:
         return match_list, match_dict_list
-    else: 
+    else:
         return "No Live Matches", match_dict_list

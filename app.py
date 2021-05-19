@@ -63,6 +63,16 @@ def remove_job_if_exists(name: str, context: CallbackContext) -> bool:
     return True
 
 
+def set_timer_once(update: Update, context: CallbackContext) -> None:
+    chat_id = update.message.chat_id
+    try:
+        context.job_queue.run_once(
+            match_detail, when=0, context=chat_id, name=str(chat_id)
+        )
+    except (IndexError, ValueError):
+        update.message.reply_text(constants.except_reply)
+
+
 def set_timer(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     try:
@@ -75,8 +85,12 @@ def set_timer(update: Update, context: CallbackContext) -> None:
         if x < 0:
             update.message.reply_text(constants.negative_match)
             return
-
-        context.job_queue.run_repeating(match_detail, due, context=chat_id, name=str(chat_id))
+        context.job_queue.run_once(
+            match_detail, when=0, context=chat_id, name=str(chat_id)
+        )
+        context.job_queue.run_repeating(
+            match_detail, due, context=chat_id, name=str(chat_id)
+        )
 
         text = constants.timer_success
         update.message.reply_text(text)
@@ -92,9 +106,7 @@ def matches(update, context):
 def unset(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     job_removed = remove_job_if_exists(str(chat_id), context)
-    text = (
-       constants.timer_cancel if job_removed else constants.no_timer
-    )
+    text = constants.timer_cancel if job_removed else constants.no_timer
     update.message.reply_text(text)
 
 
@@ -121,6 +133,7 @@ def main():
     dp.add_handler(CommandHandler("matches", matches))
     dp.add_handler(CommandHandler("set", set_timer))
     dp.add_handler(CommandHandler("unset", unset))
+    dp.add_handler(CommandHandler("setonce", set_timer_once))
 
     # message handler
     dp.add_handler(MessageHandler(Filters.text, handle_message))
