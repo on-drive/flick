@@ -66,11 +66,16 @@ def remove_job_if_exists(name: str, context: CallbackContext) -> bool:
 def set_timer_once(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     try:
+        global x
+        x = int(context.args[0])
+        if x < 0:
+            update.message.reply_text(constants.negative_match)
+            return
         context.job_queue.run_once(
             match_detail, when=0, context=chat_id, name=str(chat_id)
         )
     except (IndexError, ValueError):
-        update.message.reply_text(constants.except_reply)
+        update.message.reply_text(constants.except_reply2)
 
 
 def set_timer(update: Update, context: CallbackContext) -> None:

@@ -17,30 +17,122 @@ def get_match_details(series_id, match_id):
     team_2_name = match_detail_data["teams"][1]["team"]["name"]
     # team_1_abv = match_detail_data["teams"][0]["team"]["abbreviation"]
     # team_2_abv = match_detail_data["teams"][1]["team"]["abbreviation"]
-
-    # team_1_inning = int(match_detail_data["teams"][0]["inningNumbers"][0])
-    # team_2_inning = int(match_detail_data["teams"][1]["inningNumbers"][0])
+    try:
+        team_1_inning = int(match_detail_data["teams"][0]["inningNumbers"][0])
+    except:
+        team_1_inning = None
+    try:
+        team_2_inning = int(match_detail_data["teams"][1]["inningNumbers"][0])
+    except:
+        team_2_inning = None
+    format = match_detail_data["format"]
 
     match_name = team_1_name + " vs " + team_2_name
+    print(
+        status_text,
+        team_1_score,
+        team_2_score,
+        team_1_name,
+        team_2_name,
+        team_1_inning,
+        team_2_inning,
+    )
 
     # team_1_scrcard = team_1_abv + " - " + team_1_score
     # team_2_scrcard = team_2_abv + " - " + team_2_score
+    if format == "TEST":
+        if (
+            match_name
+            and team_1_score
+            and team_2_score
+            and status_text
+            and team_1_inning
+            and team_2_inning
+        ):
+            string = (
+                match_name
+                + "\n"
+                + team_1_name
+                + " "
+                + team_1_inning
+                + "inning"
+                + " - "
+                + team_1_score
+                + "\n"
+                + team_2_name
+                + " "
+                + team_2_inning
+                + "inning"
+                + " - "
+                + team_2_score
+                + "\n"
+                + status_text
+            )
+            return string
+        elif (
+            match_name
+            and team_1_score
+            and team_2_score
+            and status_text
+            and team_1_inning == None
+            and team_2_inning == None
+        ):
+            string = (
+                match_name
+                + "\n"
+                + team_1_name
+                + " - "
+                + team_1_score
+                + "\n"
+                + team_2_name
+                + " - "
+                + team_2_score
+                + "\n"
+                + status_text
+            )
+            return string
 
-    if match_name and team_1_score and team_2_score and status_text:
-        string = (
-            match_name + "\n" + team_1_score + "\n" + team_2_score + "\n" + status_text
-        )
-        return string
-    elif team_2_score == None and status_text and match_name:
-        string = (
-            match_name + "\n" + team_1_name + " " + team_1_score + "\n" + status_text
-        )
-        return string
-    elif team_1_score == None and status_text and match_name:
-        return match_name + "\n" + team_2_name + " " + team_2_score + "\n" + status_text
     else:
-        return "No Live Data"
-    # return status_text
+        if match_name and team_1_score and team_2_score and status_text:
+            string = (
+                match_name
+                + "\n"
+                + team_1_name
+                + " - "
+                + team_1_score
+                + "\n"
+                + team_2_name
+                + " - "
+                + team_2_score
+                + "\n"
+                + status_text
+            )
+            return string
+
+        elif team_2_score == None and status_text and match_name:
+            string = (
+                match_name
+                + "\n"
+                + team_1_name
+                + " - "
+                + team_1_score
+                + "\n"
+                + status_text
+            )
+            return string
+        elif team_1_score == None and status_text and match_name:
+            return (
+                match_name
+                + "\n"
+                + team_2_name
+                + " - "
+                + team_2_score
+                + "\n"
+                + status_text
+            )
+        else:
+            return "No Live Data"
+        # return status_text
 
 
 def get_match_dict_list():
@@ -80,3 +172,6 @@ def get_match_dict_list():
         return match_list, match_dict_list
     else:
         return "No Live Matches", match_dict_list
+
+
+get_match_details(1259520, 1259528)
