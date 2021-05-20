@@ -28,15 +28,16 @@ def get_match_details(series_id, match_id):
     format = match_detail_data["format"]
 
     match_name = team_1_name + " vs " + team_2_name
-    print(
-        status_text,
-        team_1_score,
-        team_2_score,
-        team_1_name,
-        team_2_name,
-        team_1_inning,
-        team_2_inning,
-    )
+    # print(
+    #     status_text,
+    #     team_1_score,
+    #     team_2_score,
+    #     team_1_name,
+    #     team_2_name,
+    #     team_1_inning,
+    #     team_2_inning,
+    #     format,
+    # )
 
     # team_1_scrcard = team_1_abv + " - " + team_1_score
     # team_2_scrcard = team_2_abv + " - " + team_2_score
@@ -54,14 +55,14 @@ def get_match_details(series_id, match_id):
                 + "\n"
                 + team_1_name
                 + " "
-                + team_1_inning
+                + str(team_1_inning)
                 + "inning"
                 + " - "
                 + team_1_score
                 + "\n"
                 + team_2_name
                 + " "
-                + team_2_inning
+                + str(team_2_inning)
                 + "inning"
                 + " - "
                 + team_2_score
@@ -72,24 +73,56 @@ def get_match_details(series_id, match_id):
         elif (
             match_name
             and team_1_score
-            and team_2_score
             and status_text
-            and team_1_inning == None
+            and team_1_inning
+            and team_2_score == None
             and team_2_inning == None
         ):
             string = (
                 match_name
                 + "\n"
                 + team_1_name
+                + " "
+                + str(team_1_inning)
+                + "inning"
                 + " - "
                 + team_1_score
                 + "\n"
+                + status_text
+            )
+            return string
+
+        elif (
+            match_name
+            and team_1_score == None
+            and team_2_score
+            and status_text
+            and team_1_inning == None
+            and team_2_inning
+        ):
+            string = (
+                match_name
+                + "\n"
                 + team_2_name
+                + " "
+                + str(team_2_inning)
+                + "inning"
                 + " - "
                 + team_2_score
                 + "\n"
                 + status_text
             )
+            return string
+
+        elif (
+            match_name
+            and team_1_score == None
+            and team_2_score == None
+            and status_text
+            and team_1_inning == None
+            and team_2_inning == None
+        ):
+            string = match_name + "\n" + status_text
             return string
 
     else:
@@ -172,6 +205,3 @@ def get_match_dict_list():
         return match_list, match_dict_list
     else:
         return "No Live Matches", match_dict_list
-
-
-get_match_details(1259520, 1259528)
