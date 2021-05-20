@@ -37,9 +37,7 @@ def get_match_details(series_id, match_id):
         )
         return string
     elif team_1_score == None and status_text and match_name:
-        return (
-            match_name + "\n" + team_2_name + " " + team_2_score + "\n" + status_text
-        )
+        return match_name + "\n" + team_2_name + " " + team_2_score + "\n" + status_text
     else:
         return "No Live Data"
     # return status_text
@@ -63,7 +61,7 @@ def get_match_dict_list():
                 "team-2": match["teams"][1]["team"]["longName"],
             }
             for match in match_data
-            # if match["status"] == "Live"
+            if match["status"] == "Live"
         ]
     except Exception:
         pass
